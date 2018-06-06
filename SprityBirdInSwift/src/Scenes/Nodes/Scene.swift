@@ -101,25 +101,21 @@ class Scene : SKScene, SKPhysicsContactDelegate {
         self.nbObstacles = Int(ceil(Double(self.frame.size.width)/Double(OBSTACLE_INTERVAL_SPACE)));
         var lastBlockPos:CGFloat = 0.0;
         self.bottomPipes = [];
-        self.topPipes = [];
+        
         for i in 0 ..< self.nbObstacles {
-            let topPipe = SKSpriteNode(imageNamed: "pipe_top");
-            topPipe.anchorPoint = CGPoint.zero;
-            self.addChild(topPipe);
-            self.topPipes.append(topPipe);
-            
+          
             let bottomPipe = SKSpriteNode(imageNamed: "pipe_bottom");
             bottomPipe.anchorPoint = CGPoint.zero;
             self.addChild(bottomPipe);
             self.bottomPipes.append(bottomPipe);
             
             if(i==0) {
-                place(bottomPipe, topPipe: topPipe, xPos: self.frame.size.width + FIRST_OBSTACLE_PADDING);
+                place(bottomPipe, xPos: self.frame.size.width + FIRST_OBSTACLE_PADDING);
             } else {
-                place(bottomPipe, topPipe: topPipe, xPos: lastBlockPos + bottomPipe.frame.size.width +
+                place(bottomPipe, xPos: lastBlockPos + bottomPipe.frame.size.width +
                     OBSTACLE_INTERVAL_SPACE);
             }
-            lastBlockPos = topPipe.position.x;
+            lastBlockPos = bottomPipe.position.x;
         }
     }
     
@@ -137,10 +133,20 @@ class Scene : SKScene, SKPhysicsContactDelegate {
         if(!self.birdDeath) {
             self.back!.update(currentTime);
             self.floor!.update(currentTime);
-            self.bird!.update(currentTime);
+            self.bird!.update(currentTime)
+            // TODO add action on buttons
+            
             self.updateObstacles(currentTime);
             self.updateScore(currentTime);
         }
+    }
+    
+    func upButtonPressed() {
+        print("UP !")
+    }
+    
+    func downbuttonPressed() {
+        print("DOWN !")
     }
     
     func updateObstacles(_ currentTime: TimeInterval) {
@@ -149,23 +155,17 @@ class Scene : SKScene, SKPhysicsContactDelegate {
         }
         
         for i in 0 ..< self.nbObstacles {
-            let topPipe = self.topPipes[i];
             let bottomPipe = self.bottomPipes[i];
             
-            if(topPipe.frame.origin.x < -topPipe.size.width) {
-                let mostRightPipe = self.topPipes[(i+(self.nbObstacles-1))%self.nbObstacles];
-                place(bottomPipe, topPipe: topPipe, xPos: mostRightPipe.frame.origin.x + topPipe.frame.size.width + OBSTACLE_INTERVAL_SPACE);
-            }
             
-            topPipe.position = CGPoint(x: topPipe.frame.origin.x - FLOOR_SCROLLING_SPEED, y: topPipe.frame.origin.y);
             bottomPipe.position = CGPoint(x: bottomPipe.frame.origin.x - FLOOR_SCROLLING_SPEED, y: bottomPipe.frame.origin.y);
         }
     }
     
-    func place(_ bottomPipe: SKSpriteNode, topPipe: SKSpriteNode, xPos: CGFloat) {
+    func place(_ bottomPipe: SKSpriteNode, xPos: CGFloat) {
         let availableSpace = self.frame.size.height - self.floor!.frame.size.height;
         let maxVariance = availableSpace - (2 * OBSTACLE_MIN_HEIGHT) - VERTICAL_GAP_SIZE;
-        let test = 0.0;
+        _ = 0.0;
         let variance = Math().randomFloatBetween(Float(0.0), max: Float(maxVariance));
         
         let minBottomPosY = self.floor!.frame.size.height + OBSTACLE_MIN_HEIGHT - self.frame.size.height;
@@ -176,18 +176,12 @@ class Scene : SKScene, SKPhysicsContactDelegate {
     
         bottomPipe.physicsBody!.categoryBitMask = Constants.BLOCK_BIT_MASK;
         bottomPipe.physicsBody!.contactTestBitMask = Constants.BIRD_BIT_MASK;
-        
-        topPipe.position = CGPoint(x: xPos,y: CGFloat(bottomPosY)+bottomPipe.frame.size.height + VERTICAL_GAP_SIZE);
-        topPipe.physicsBody = SKPhysicsBody(edgeLoopFrom: CGRect(x: 0,y: 0, width: topPipe.frame.size.width, height: topPipe.frame.size.height));
-        
-        topPipe.physicsBody!.categoryBitMask = Constants.BLOCK_BIT_MASK;
-        topPipe.physicsBody!.contactTestBitMask = Constants.BIRD_BIT_MASK;
 
     }
     
     func updateScore(_ currentTime: TimeInterval) {
         for i in 0 ..< self.nbObstacles {
-            let topPipe = self.topPipes[i];
+            let topPipe = self.bottomPipes[i];
             let topPipePosition = topPipe.frame.origin.x + topPipe.frame.size.width/2;
             if(topPipePosition > self.bird!.position.x && topPipePosition < self.bird!.position.x + FLOOR_SCROLLING_SPEED) {
                 self.score += 1;

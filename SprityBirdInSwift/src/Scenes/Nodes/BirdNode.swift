@@ -52,7 +52,7 @@ class BirdNode: SKSpriteNode {
             self.deltaPosY += displacement;
             
         } else {
-            self.zRotation = CGFloat(M_PI) * self.physicsBody!.velocity.dy * 0.0005;
+            //self.zRotation = CGFloat(M_PI) * self.physicsBody!.velocity.dy * 0.0005;
         }
     }
     

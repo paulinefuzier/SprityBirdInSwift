@@ -25,6 +25,10 @@ class GameViewController: UIViewController, SceneDelegate {
     var currentScore: UILabel!
     @IBOutlet
     var bestScoreLabel: UILabel!
+    @IBOutlet
+    var upButton : UIButton!
+    @IBOutlet
+    var downButton : UIButton!
     
     var scene: Scene?
     var flash: UIView?
