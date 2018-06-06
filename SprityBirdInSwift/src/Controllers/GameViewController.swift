@@ -78,6 +78,20 @@ class GameViewController: UIViewController, SceneDelegate {
         UIView.animate(withDuration: 0.5, animations: {
             self.getReadyView.alpha = 0
 		});
+       upButton.addTarget(self, action: #selector(GameViewController.upButtonClicked)
+            , for: .touchUpInside)
+        downButton.addTarget(self, action: #selector(GameViewController.downButtonClicked)
+            , for: .touchUpInside)
+    }
+    
+    func upButtonClicked (){
+        print("UP UP UP")
+        self.scene?.bird?.physicsBody!.velocity = CGVector(dx: 0, dy: 50);
+    }
+    
+    func downButtonClicked (){
+        print("DOWN DOWN DOWN")
+        self.scene?.bird?.physicsBody!.velocity = CGVector(dx: 0, dy: -50);
     }
     
     func eventBirdDeath() {
