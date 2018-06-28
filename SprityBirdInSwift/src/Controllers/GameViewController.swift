@@ -65,6 +65,7 @@ class GameViewController: UIViewController, SceneDelegate {
     
     func eventStart() {
         UIView.animate(withDuration: 0.2, animations: {
+        
         self.gameOverView.alpha = 0
         self.gameOverView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
         self.flash!.alpha = 0
@@ -78,7 +79,9 @@ class GameViewController: UIViewController, SceneDelegate {
         UIView.animate(withDuration: 0.5, animations: {
             self.getReadyView.alpha = 0
 		});
-       upButton.addTarget(self, action: #selector(GameViewController.upButtonClicked)
+        upButton.isEnabled = true
+        downButton.isEnabled = true
+        upButton.addTarget(self, action: #selector(GameViewController.upButtonClicked)
             , for: .touchUpInside)
         downButton.addTarget(self, action: #selector(GameViewController.downButtonClicked)
             , for: .touchUpInside)
